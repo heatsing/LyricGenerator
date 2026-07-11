@@ -149,11 +149,17 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
         <Script
-          defer
-          src="https://cloud.umami.is/script.js"
-          data-website-id="1932d792-2720-4ed8-bb65-b1c7e98517f3"
+          src="https://www.googletagmanager.com/gtag/js?id=G-BHYYG5JT2R"
           strategy="afterInteractive"
         />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-BHYYG5JT2R');
+          `}
+        </Script>
       </head>
       <body className={`font-sans antialiased`}>
         <LanguageProvider>{children}</LanguageProvider>

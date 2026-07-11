@@ -23,10 +23,10 @@ export function Header() {
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${
       scrolled
-        ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-soft'
-        : 'bg-transparent'
+        ? 'bg-[#f7f5ef]/92 dark:bg-[#101d28]/92 backdrop-blur-xl border-b border-[#152b3a]/10'
+        : 'bg-[#f7f5ef] dark:bg-[#101d28] border-b border-[#152b3a]/10'
     }`}>
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="studio-shell py-4 flex items-center justify-between">
         <Link href="/" className="hover:opacity-90 transition-opacity group">
           {/* Desktop logo */}
           <div className="hidden sm:block">
@@ -42,19 +42,19 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-1">
           <Link
             href="/"
-            className="relative px-4 py-2 text-sm font-medium text-foreground rounded-lg hover:bg-primary/10 transition-all duration-200"
+            className="relative px-4 py-2 text-sm font-semibold text-foreground hover:text-[#ef634c] transition-colors"
           >
             Lyric Generator
           </Link>
           <Link
             href="/poem-generator"
-            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/10 rounded-lg transition-all duration-200"
+            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-[#ef634c] transition-colors"
           >
             Poem Generator
           </Link>
           <Link
             href="/story-generator"
-            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/10 rounded-lg transition-all duration-200"
+            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-[#ef634c] transition-colors"
           >
             Short Story Generator
           </Link>
@@ -62,7 +62,7 @@ export function Header() {
           <LanguageSwitcher />
           <ThemeToggle />
           <Link href="/login" className="ml-2">
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white shadow-md shadow-orange-500/25">
+            <Button size="sm" className="rounded-full bg-[#152b3a] hover:bg-[#ef634c] text-white px-5 shadow-none">
               <Sparkles className="w-4 h-4 mr-1.5" />
               Login
             </Button>

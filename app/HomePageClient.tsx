@@ -1,170 +1,103 @@
 "use client"
 
+import Link from "next/link"
+import { ArrowDown, ArrowRight, Check, Download, Feather, Music2, SlidersHorizontal, Sparkles } from "lucide-react"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
-import { HeroSection } from "@/components/HeroSection"
-import { BentoGrid } from "@/components/BentoGrid"
-import { HowItWorks } from "@/components/HowItWorks"
-import { CustomerReviews } from "@/components/customer-reviews"
 import { FAQ } from "@/components/faq"
 import LyricsGenerator from "@/components/lyrics-generator"
-import GenreGuide from "@/components/genre-guide"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import GoogleOneTap from "@/components/GoogleOneTap"
-import { ArrowRight, Sparkles } from "lucide-react"
+
+const benefits = [
+  { icon: SlidersHorizontal, title: "Make it sound like you", text: "Shape the genre, mood, theme, language and length before the first line is written." },
+  { icon: Feather, title: "Start with a real idea", text: "Give the generator a scene, phrase or story. It turns the seed into a complete song structure." },
+  { icon: Download, title: "Keep every good line", text: "Edit in place, regenerate, copy your lyrics, or export them as text and an image." },
+]
+
+const steps = [
+  ["Set the direction", "Choose a genre, mood and theme."],
+  ["Add your spark", "Describe the story or phrase you want in the song."],
+  ["Generate & refine", "Get structured lyrics, then edit or regenerate any time."],
+]
 
 export default function HomePageClient() {
   return (
-    <main className="min-h-screen bg-background relative">
-      {/* Global background effects */}
-      <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px]" />
-      </div>
-
+    <main className="studio-page min-h-screen">
       <GoogleOneTap />
       <Header />
 
-      {/* Hero Section */}
-      <HeroSection />
-
-      {/* Generator Section - Main CTA */}
-      <section id="generator" className="container mx-auto px-4 py-16 md:py-24">
-        <div className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 mb-4 text-sm font-medium text-primary bg-primary/10 rounded-full">
-            Start Creating
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-balance mb-4">
-            Generate Your <span className="text-gradient">Perfect Lyrics</span>
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Choose your genre, mood, and theme. Our AI will create unique, professional lyrics in seconds.
-          </p>
-        </div>
-        <LyricsGenerator />
-      </section>
-
-      {/* Bento Grid Features */}
-      <BentoGrid />
-
-      {/* How It Works */}
-      <HowItWorks />
-
-      {/* Genre Guide Section */}
-      <GenreGuide />
-
-      {/* Customer Reviews Section */}
-      <section className="py-20 md:py-28 relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-muted/20" />
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="inline-block px-4 py-1.5 mb-4 text-sm font-medium text-primary bg-primary/10 rounded-full">
-              Testimonials
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-balance mb-4">
-              Loved by <span className="text-gradient">500K+ Creators</span>
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Join thousands of songwriters, musicians, and content creators who trust our AI
-            </p>
+      <section className="studio-hero">
+        <div className="studio-shell studio-hero-grid">
+          <div className="studio-hero-copy">
+            <div className="studio-kicker"><span /> AI songwriting studio · free to use</div>
+            <h1>Turn a feeling<span className="mobile-break"><br /></span> into <em>lyrics worth<span className="mobile-break"><br /></span> singing.</em></h1>
+            <p className="studio-lede">Choose the sound. Set the mood. Give us one honest idea—and get a complete, editable song in seconds.</p>
+            <div className="studio-actions">
+              <Link href="#generator" className="studio-button studio-button-primary">Write my song <ArrowRight size={18} /></Link>
+              <Link href="#how-it-works" className="studio-button studio-button-quiet">See how it works <ArrowDown size={17} /></Link>
+            </div>
+            <div className="studio-trust">
+              <span><Check size={15} /> No sign-up</span>
+              <span><Check size={15} /> 15+ genres</span>
+              <span><Check size={15} /> Edit & export</span>
+            </div>
           </div>
-          <CustomerReviews />
-        </div>
-      </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="container mx-auto px-4 py-20 md:py-28">
-        <div className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 mb-4 text-sm font-medium text-primary bg-primary/10 rounded-full">
-            FAQ
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-balance mb-4">
-            Frequently Asked <span className="text-gradient">Questions</span>
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Everything you need to know about our AI lyrics generator
-          </p>
-        </div>
-        <FAQ />
-      </section>
-
-      {/* Popular Generators */}
-      <section className="py-20 md:py-28 relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-muted/30" />
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="inline-block px-4 py-1.5 mb-4 text-sm font-medium text-primary bg-primary/10 rounded-full">
-              Explore
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-balance mb-4">
-              Generate Lyrics by <span className="text-gradient">Genre</span>
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Explore our specialized AI generators for different music styles and occasions
-            </p>
+          <div className="lyric-sheet" aria-label="Example generated lyric">
+            <div className="lyric-sheet-head"><span>NOW WRITING</span><span>POP · NOSTALGIC</span></div>
+            <div className="lyric-sheet-title">Polaroid Summer</div>
+            <div className="lyric-rule"><span>VERSE 01</span></div>
+            <p>We left our names in the boardwalk grain<br/>Danced through the salt and a midnight rain</p>
+            <div className="lyric-rule coral"><span>CHORUS</span></div>
+            <p className="lyric-chorus">If the summer fades,<br/>let the colors stay—<br/>I still see us in the light.</p>
+            <div className="lyric-wave" aria-hidden="true">▂▄▆▃▇▅▂▆▄▇▃▅▂▄▆▃▇▅</div>
+            <Sparkles className="lyric-spark" size={22} />
           </div>
-          <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {[
-              { name: "R&B Lyrics", slug: "rnb" },
-              { name: "Rock Lyrics", slug: "rock" },
-              { name: "Pop Lyrics", slug: "pop" },
-              { name: "Rap Lyrics", slug: "rap" },
-              { name: "Country Lyrics", slug: "country" },
-              { name: "Jazz Lyrics", slug: "jazz" },
-              { name: "K-Pop Lyrics", slug: "k-pop" },
-              { name: "Folk Lyrics", slug: "folk" },
-              { name: "EDM Lyrics", slug: "edm" },
-              { name: "Metal Lyrics", slug: "metal" },
-              { name: "Blues Lyrics", slug: "blues" },
-              { name: "Indie Lyrics", slug: "indie" },
-              { name: "Love Song", slug: "love-song" },
-              { name: "Christmas Song", slug: "christmas-song" },
-              { name: "Birthday Song", slug: "birthday-song" },
-              { name: "Diss Track", slug: "diss-track" },
-            ].map((genre) => (
-              <Link key={genre.slug} href={`/genre/${genre.slug}`}>
-                <Button
-                  variant="outline"
-                  className="w-full h-12 text-sm font-medium glass border-white/10 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300"
-                >
-                  {genre.name}
-                </Button>
-              </Link>
+        </div>
+      </section>
+
+      <section id="generator" className="studio-generator">
+        <div className="studio-shell">
+          <div className="studio-section-heading split">
+            <div><span className="studio-eyebrow">THE WRITING ROOM</span><h2>Your idea in.<br/>A full song out.</h2></div>
+            <p>Build the brief on the left. Your lyrics arrive on the right, ready to edit, save and turn into a song.</p>
+          </div>
+          <LyricsGenerator />
+        </div>
+      </section>
+
+      <section className="studio-benefits">
+        <div className="studio-shell">
+          <div className="studio-section-heading"><span className="studio-eyebrow">BUILT FOR THE FIRST DRAFT</span><h2>Less blank page.<br/>More point of view.</h2></div>
+          <div className="benefit-grid">
+            {benefits.map(({ icon: Icon, title, text }, index) => (
+              <article key={title} className="benefit-card"><div className="benefit-number">0{index + 1}</div><Icon size={25} /><h3>{title}</h3><p>{text}</p></article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="py-20 md:py-32 relative overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 rounded-full blur-[100px]" />
-        </div>
-
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Ready to Create Your <span className="text-gradient">Next Hit?</span>
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join over 500,000 creators who use our AI to write amazing lyrics. Start for free, no signup required.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="#generator">
-                <Button size="lg" className="h-14 px-8 text-base bg-orange-500 hover:bg-orange-600 text-white shadow-xl shadow-orange-500/25 group">
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Start Creating Free
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </div>
-          </div>
+      <section id="how-it-works" className="studio-process">
+        <div className="studio-shell process-grid">
+          <div className="process-intro"><span className="studio-eyebrow">HOW IT WORKS</span><h2>From rough thought to finished structure.</h2><p>No prompt-writing expertise required. Use the controls you already understand as a songwriter.</p></div>
+          <ol className="process-list">
+            {steps.map(([title, text], index) => <li key={title}><span>{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></li>)}
+          </ol>
         </div>
       </section>
 
+      <section className="studio-genres">
+        <div className="studio-shell">
+          <div className="studio-section-heading split"><div><span className="studio-eyebrow">FIND YOUR SOUND</span><h2>One studio.<br/>Every kind of song.</h2></div><p>Start with a familiar genre, then bend the mood and story until it feels like yours.</p></div>
+          <div className="genre-marquee">{["Pop", "Rap", "R&B", "Rock", "Country", "Indie", "K-Pop", "Jazz", "Folk", "EDM", "Blues", "Metal"].map((genre) => <Link key={genre} href={`/genre/${genre.toLowerCase().replace("&", "n").replace("-", "-")}`}>{genre}<Music2 size={15} /></Link>)}</div>
+        </div>
+      </section>
+
+      <section id="faq" className="studio-faq">
+        <div className="studio-shell faq-grid"><div className="studio-section-heading"><span className="studio-eyebrow">QUESTIONS, ANSWERED</span><h2>Before you press generate.</h2><p>Everything you need to know about creating, editing and using your lyrics.</p></div><FAQ /></div>
+      </section>
+
+      <section className="studio-final"><div className="studio-shell"><div className="studio-final-card"><span>YOUR NEXT SONG STARTS HERE</span><h2>Give the blank page<br/>something to work with.</h2><Link href="#generator" className="studio-button studio-button-light">Start writing free <Sparkles size={18} /></Link></div></div></section>
       <Footer />
     </main>
   )
