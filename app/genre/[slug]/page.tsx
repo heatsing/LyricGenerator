@@ -7,6 +7,7 @@ import FAQ from "@/components/faq"
 import CustomerReviews from "@/components/customer-reviews"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
+import { ToolContentGuide } from "@/components/ToolContentGuide"
 
 const genreData: Record<
   string,
@@ -197,7 +198,7 @@ export default async function GenrePage({ params }: { params: Promise<{ slug: st
   }
 
   return (
-    <main className="min-h-screen bg-background relative">
+    <main className="min-h-screen bg-background relative overflow-x-hidden">
       {/* Global background effects */}
       <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px]" />
@@ -225,7 +226,7 @@ export default async function GenrePage({ params }: { params: Promise<{ slug: st
               <ArrowRight className="w-4 h-4 text-muted-foreground" />
             </div>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05]">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] break-words">
               <span className="block text-foreground">{data.displayName.split(' ')[0]}</span>
               <span className="block text-gradient mt-2">{data.displayName.split(' ').slice(1).join(' ')}</span>
             </h1>
@@ -262,6 +263,8 @@ export default async function GenrePage({ params }: { params: Promise<{ slug: st
         </div>
         <LyricsGenerator presetGenre={data.name} />
       </section>
+
+      <ToolContentGuide toolName={data.displayName} kind="lyrics" style={data.name} />
 
       {/* Features Section */}
       <section className="py-20 relative overflow-hidden">

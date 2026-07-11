@@ -7,6 +7,7 @@ import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import Link from "next/link"
 import seoPages from "@/data/seo_pages.json"
+import { ToolContentGuide } from "@/components/ToolContentGuide"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lyricgenerator.cc"
 
@@ -162,7 +163,7 @@ export default async function GeneratorPage({ params }: { params: Promise<{ slug
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         {/* Hero Section */}
         <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-primary/5 to-background">
           <div className="max-w-7xl mx-auto text-center">
@@ -196,6 +197,8 @@ export default async function GeneratorPage({ params }: { params: Promise<{ slug
             <GeneratorClient preset={page.preset} />
           </div>
         </section>
+
+        <ToolContentGuide toolName={page.title} kind="lyrics" style={page.preset.genre} />
 
         <section className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/30">
           <div className="max-w-4xl mx-auto">

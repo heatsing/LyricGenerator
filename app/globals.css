@@ -40,6 +40,29 @@
   --sidebar-ring: oklch(0.5 0 0);
 }
 
+@layer components {
+  .tool-manual { --manual-ink:#152b3a;--manual-paper:#f4f7f5;--manual-coral:#ef634c;--manual-mint:#b8e2d0;background:var(--manual-paper);color:var(--manual-ink);padding:104px 0;border-block:1px solid #152b3a1f; }
+  .tool-manual-shell { width:min(1120px,calc(100% - 40px));margin-inline:auto; }
+  .tool-manual-intro { display:grid;grid-template-columns:1.1fr .9fr;column-gap:80px;align-items:end;margin-bottom:42px; }
+  .tool-manual-kicker { grid-column:1/-1;font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:var(--manual-coral);margin-bottom:16px; }
+  .tool-manual-intro h2 { font-size:clamp(2.7rem,5vw,4.8rem);line-height:.96;letter-spacing:-.055em;font-weight:850; }
+  .tool-manual-intro p { font-size:1.05rem;line-height:1.7;color:#53636c; }
+  .tool-manual-map { position:sticky;top:78px;z-index:20;display:flex;gap:4px;overflow-x:auto;padding:7px;margin-bottom:24px;background:#152b3a;border-radius:999px;scrollbar-width:none; }
+  .tool-manual-map a { flex:1;white-space:nowrap;text-align:center;padding:10px 13px;border-radius:999px;color:#dce9e5;font:700 11px ui-monospace,monospace;letter-spacing:.04em;transition:.2s; }
+  .tool-manual-map a:hover,.tool-manual-map a:focus-visible { background:var(--manual-coral);color:white;outline:none; }
+  .tool-manual-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px; }
+  .tool-manual-card { scroll-margin-top:150px;background:#fff;border:1px solid #152b3a20;border-radius:6px;padding:34px;box-shadow:0 14px 36px #152b3a0a; }
+  .tool-manual-lead { background:var(--manual-ink);color:white; }.tool-manual-lead p{color:#d4dfdc!important}.tool-manual-warning{background:#fff0e9;border-color:#ef634c55}.tool-manual-wide{grid-column:1/-1}
+  .tool-card-label { display:flex;align-items:center;gap:9px;margin-bottom:28px;font:750 11px ui-monospace,monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--manual-coral); }
+  .tool-manual-card h3 { max-width:700px;font-size:clamp(1.55rem,3vw,2.3rem);line-height:1.12;letter-spacing:-.035em;font-weight:820;margin-bottom:15px; }
+  .tool-manual-card>p { color:#596a72;line-height:1.75;max-width:850px; }.tool-manual-card ul{display:grid;gap:12px}.tool-manual-card li{display:flex;align-items:flex-start;gap:10px;line-height:1.55}.tool-manual-card li svg{flex:none;margin-top:3px;color:#248164}
+  .tool-steps { display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:30px;border-block:1px solid #152b3a22; }.tool-steps li{display:grid!important;grid-template-columns:34px 1fr;gap:12px;padding:24px 18px;border-right:1px solid #152b3a22}.tool-steps li:last-child{border:0}.tool-steps>li>span{display:flex;align-items:center;justify-content:center;width:29px;height:29px;border-radius:50%;background:var(--manual-coral);color:white;font-weight:800}.tool-steps strong{display:block;margin-bottom:7px}.tool-steps p{font-size:.9rem;color:#64737a;line-height:1.5}
+  .tool-comparison { background:var(--manual-mint); }.comparison-row{display:grid;grid-template-columns:180px 1fr;gap:20px;padding:16px 0;border-top:1px solid #152b3a33;margin-top:22px}.comparison-row+.comparison-row{margin-top:0}.comparison-row span:first-child{font-weight:800}
+  .tool-fixes{border-top:1px solid #152b3a22}.tool-fixes details{border-bottom:1px solid #152b3a22;padding:20px 0}.tool-fixes summary{cursor:pointer;font-weight:800;list-style-position:outside;margin-left:18px}.tool-fixes p{margin:10px 0 0 18px;color:#5b6a72;line-height:1.65}
+  @media(max-width:800px){.tool-manual{padding:76px 0}.tool-manual-intro{grid-template-columns:1fr;gap:22px}.tool-manual-grid{grid-template-columns:1fr}.tool-manual-wide{grid-column:auto}.tool-steps{grid-template-columns:1fr}.tool-steps li{border-right:0;border-bottom:1px solid #152b3a22}.tool-manual-map{border-radius:5px;justify-content:flex-start}.tool-manual-map a{flex:0 0 auto}.comparison-row{grid-template-columns:1fr;gap:5px}}
+  @media(max-width:520px){.tool-manual-shell{width:calc(100% - 28px)}.tool-manual-card{padding:25px 20px}.tool-manual-intro h2{font-size:2.65rem}}
+}
+
 .dark {
   /* Dark theme colors */
   --background: oklch(0.09 0 0);

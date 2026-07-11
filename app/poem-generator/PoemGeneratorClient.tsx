@@ -8,10 +8,11 @@ import FAQ from "@/components/faq"
 import CustomerReviews from "@/components/customer-reviews"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { ToolContentGuide } from "@/components/ToolContentGuide"
 
 export default function PoemGeneratorClient() {
   return (
-    <main className="min-h-screen bg-background relative">
+    <main className="min-h-screen bg-background relative overflow-x-hidden">
       {/* Global background effects */}
       <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px]" />
@@ -76,6 +77,8 @@ export default function PoemGeneratorClient() {
         </div>
         <PoemGenerator />
       </section>
+
+      <ToolContentGuide toolName="AI Poem Generator" kind="poem" />
 
       {/* Features Section - Bento Style */}
       <section className="py-20 relative overflow-hidden">
