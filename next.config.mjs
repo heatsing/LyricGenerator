@@ -3,16 +3,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Note: eslint config is no longer supported in next.config.mjs (Next.js 16+)
+  // Use `next lint` CLI directly instead.
   images: {
     unoptimized: true,
-  },
-  experimental: {
-    turbo: {
-      rules: {},
-    },
   },
   async headers() {
     return [
