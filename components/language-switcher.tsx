@@ -5,9 +5,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Languages } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 import { languages } from "@/lib/i18n"
+import { useEffect, useState } from "react"
 
-export { LanguageSwitcher }
-export default function LanguageSwitcher() {
+function LanguageSwitcherInner() {
   const { language, setLanguage } = useLanguage()
 
   return (
@@ -28,4 +28,20 @@ export default function LanguageSwitcher() {
       </DropdownMenuContent>
     </DropdownMenu>
   )
+}
+
+export { LanguageSwitcher }
+export default function LanguageSwitcher() {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="sm" className="gap-2" suppressHydrationWarning>
+        <Languages className="w-4 h-4" />
+        <span className="hidden sm:inline">English</span>
+      </Button>
+    )
+  }
+  return <LanguageSwitcherInner />
 }

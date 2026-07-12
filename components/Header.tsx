@@ -1,16 +1,19 @@
 "use client"
 
 import Link from "next/link"
-import { Menu, X, Sparkles } from "lucide-react"
+import { Menu, X, Sparkles, LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { useState, useEffect } from "react"
+import { useSession, signOut } from "next-auth/react"
 import { Logo, LogoCompact } from "@/components/Logo"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { data: session, status } = useSession()
+  const isLoggedIn = status === "authenticated" && !!session?.user
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,8 +26,8 @@ export function Header() {
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${
       scrolled
-        ? 'bg-[#f7f5ef]/92 dark:bg-[#101d28]/92 backdrop-blur-xl border-b border-[#152b3a]/10'
-        : 'bg-[#f7f5ef] dark:bg-[#101d28] border-b border-[#152b3a]/10'
+        ? 'bg-[#EEF8FC]/85 dark:bg-[#0c0a14]/85 backdrop-blur-xl border-b border-[#18181b]/10'
+        : 'bg-[#EEF8FC] dark:bg-[#0c0a14] border-b border-[#18181b]/10'
     }`}>
       <div className="studio-shell py-4 flex items-center justify-between">
         <Link href="/" className="hover:opacity-90 transition-opacity group">
@@ -42,31 +45,53 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-1">
           <Link
             href="/"
-            className="relative px-4 py-2 text-sm font-semibold text-foreground hover:text-[#ef634c] transition-colors"
+            className="relative px-4 py-2 text-sm font-semibold text-foreground hover:text-[#8b5cf6] transition-colors"
           >
             Lyric Generator
           </Link>
           <Link
             href="/poem-generator"
-            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-[#ef634c] transition-colors"
+            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-[#8b5cf6] transition-colors"
           >
             Poem Generator
           </Link>
           <Link
             href="/story-generator"
-            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-[#ef634c] transition-colors"
+            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-[#8b5cf6] transition-colors"
           >
             Short Story Generator
           </Link>
           <div className="w-px h-6 bg-border mx-2" />
           <LanguageSwitcher />
           <ThemeToggle />
-          <Link href="/login" className="ml-2">
-            <Button size="sm" className="rounded-full bg-[#152b3a] hover:bg-[#ef634c] text-white px-5 shadow-none">
-              <Sparkles className="w-4 h-4 mr-1.5" />
-              Login
-            </Button>
-          </Link>
+          {isLoggedIn ? (
+            <div className="ml-2 flex items-center gap-2">
+              {session?.user?.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={session.user.image}
+                  alt={session.user.name || "avatar"}
+                  className="w-8 h-8 rounded-full border border-[#dceaf2]"
+                />
+              )}
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-full border-[#dceaf2] bg-white hover:bg-[#EEF8FC] text-foreground px-4 shadow-none"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                <LogOut className="w-4 h-4 mr-1.5" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link href="/login" className="ml-2">
+              <Button size="sm" className="rounded-full bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:opacity-90 text-white px-5 shadow-none">
+                <Sparkles className="w-4 h-4 mr-1.5" />
+                Login
+              </Button>
+            </Link>
+          )}
         </nav>
 
         {/* Mobile Menu Button */}
@@ -110,12 +135,37 @@ export function Header() {
             <LanguageSwitcher />
             <ThemeToggle />
           </div>
-          <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="mt-2">
-            <Button size="lg" className="w-full min-h-[44px] bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/25">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Login
-            </Button>
-          </Link>
+          {isLoggedIn ? (
+            <div className="px-4 py-2 flex items-center gap-3">
+              {session?.user?.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={session.user.image}
+                  alt={session.user.name || "avatar"}
+                  className="w-8 h-8 rounded-full border border-[#dceaf2]"
+                />
+              )}
+              <span className="text-sm text-muted-foreground flex-1 truncate">
+                {session?.user?.name || session?.user?.email}
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-full border-[#dceaf2] bg-white hover:bg-[#EEF8FC] text-foreground"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                <LogOut className="w-4 h-4 mr-1.5" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="mt-2">
+              <Button size="lg" className="w-full min-h-[44px] bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:opacity-90 text-white shadow-lg shadow-[#8b5cf6]/25">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Login
+              </Button>
+            </Link>
+          )}
         </nav>
       </div>
     </header>

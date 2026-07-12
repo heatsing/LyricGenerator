@@ -4,7 +4,15 @@ import { Star } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { useEffect, useRef, useState } from "react"
 
-const reviews = [
+type Review = {
+  name: string
+  role: string
+  avatar: string
+  rating: number
+  review: string
+}
+
+const defaultReviews: Review[] = [
   {
     name: "Sarah Johnson",
     role: "Independent Musician",
@@ -55,7 +63,12 @@ const reviews = [
   },
 ]
 
-export function CustomerReviews() {
+interface CustomerReviewsProps {
+  reviews?: Review[]
+}
+
+export function CustomerReviews(props: CustomerReviewsProps = {}) {
+  const reviews = props.reviews || defaultReviews
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)

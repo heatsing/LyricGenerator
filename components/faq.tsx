@@ -48,8 +48,9 @@ export function generateFAQStructuredData() {
   }
 }
 
-export function FAQ() {
+export function FAQ({ faqData: customFaqData }: { faqData?: { question: string; answer: string }[] } = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const data = customFaqData || faqData
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
@@ -65,65 +66,42 @@ export function FAQ() {
         }}
       />
 
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_2fr] gap-12 items-start">
-        {/* Left side - Description */}
-        <div className="lg:sticky lg:top-8">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">Frequently Asked Questions</h2>
-          <p className="text-muted-foreground leading-relaxed text-pretty">
-            Everything you need to know about creating professional song lyrics with our free AI-powered generator. Get
-            instant answers about features, usage rights, supported genres, and more.
-          </p>
-          <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
-            <p className="text-sm font-semibold mb-2">Still have questions?</p>
-            <p className="text-sm text-muted-foreground">
-              Our AI lyrics generator is designed to be intuitive and powerful. Browse the questions to learn more about
-              how it works.
-            </p>
-          </div>
-        </div>
-
-        {/* Right side - FAQ accordion */}
-        <div
-          className="space-y-4"
-          role="list"
-          aria-label="Frequently asked questions"
-        >
-          {faqData.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-card border border-border rounded-lg overflow-hidden"
-              role="listitem"
+      <div className="max-w-3xl mx-auto space-y-3" role="list" aria-label="Frequently asked questions">
+        {data.map((faq, index) => (
+          <div
+            key={index}
+            className="bg-card border border-border rounded-xl overflow-hidden"
+            role="listitem"
+          >
+            <button
+              onClick={() => toggleFAQ(index)}
+              className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+              aria-expanded={openIndex === index}
+              aria-controls={`faq-answer-${index}`}
+              id={`faq-question-${index}`}
             >
-              <button
-                onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-muted/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
-                aria-expanded={openIndex === index}
-                aria-controls={`faq-answer-${index}`}
-                id={`faq-question-${index}`}
-              >
-                <span className="font-semibold pr-8 text-pretty">{faq.question}</span>
-                <ChevronDown
-                  className={cn("w-5 h-5 text-muted-foreground transition-transform flex-shrink-0", {
-                    "transform rotate-180": openIndex === index,
-                  })}
-                  aria-hidden="true"
-                />
-              </button>
-              <div
-                id={`faq-answer-${index}`}
-                role="region"
-                aria-labelledby={`faq-question-${index}`}
-                className={cn("overflow-hidden transition-all duration-300 ease-in-out", {
-                  "max-h-0": openIndex !== index,
-                  "max-h-[1000px]": openIndex === index,
+              <span className="font-semibold pr-8 text-pretty">{faq.question}</span>
+              <ChevronDown
+                className={cn("w-5 h-5 text-muted-foreground transition-transform flex-shrink-0", {
+                  "transform rotate-180": openIndex === index,
                 })}
-                hidden={openIndex !== index}
-              >
-                <div className="px-6 pb-4 text-muted-foreground leading-relaxed text-pretty">{faq.answer}</div>
-              </div>
+                aria-hidden="true"
+              />
+            </button>
+            <div
+              id={`faq-answer-${index}`}
+              role="region"
+              aria-labelledby={`faq-question-${index}`}
+              className={cn("overflow-hidden transition-all duration-300 ease-in-out", {
+                "max-h-0": openIndex !== index,
+                "max-h-[1000px]": openIndex === index,
+              })}
+              hidden={openIndex !== index}
+            >
+              <div className="px-5 pb-4 text-muted-foreground leading-relaxed text-pretty">{faq.answer}</div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </>
   )

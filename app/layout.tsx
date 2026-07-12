@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { LanguageProvider } from "@/contexts/language-context"
+import { SessionProvider } from "@/components/session-provider"
 import Script from "next/script"
 import "./globals.css"
 
@@ -132,7 +133,7 @@ export default function RootLayout({
               screenshot: "/og-image.png",
               softwareVersion: "2.0",
               datePublished: "2024-01-01",
-              dateModified: new Date().toISOString().split("T")[0],
+              dateModified: "2024-01-01",
               author: {
                 "@type": "Organization",
                 name: "AI Lyrics Generator",
@@ -162,7 +163,9 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`font-sans antialiased`}>
-        <LanguageProvider>{children}</LanguageProvider>
+        <SessionProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </SessionProvider>
         <Analytics />
       </body>
     </html>

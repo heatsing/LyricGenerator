@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     "Generate unique song lyrics instantly with our free AI lyrics generator. Create professional lyrics for pop, rap, rock, country & more. No signup required.", // 158 chars
   keywords: [
     // Primary keywords
+    "lyric generator",
+    "lyrics generator",
     "ai lyrics generator",
     "free lyrics generator",
     "song lyrics generator",

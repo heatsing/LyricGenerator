@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { getLandingPageSlugs } from "@/data/landing-pages"
 
 const seoPages = [
   {
@@ -155,12 +156,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "christmas-song-lyrics",
   ]
 
+  const landingSlugs = getLandingPageSlugs()
+
   return [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     { url: `${baseUrl}/poem-generator`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/story-generator`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    ...landingSlugs.map((slug) => ({
+      url: `${baseUrl}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    })),
     ...genres.map((slug) => ({
       url: `${baseUrl}/genre/${slug}`,
       lastModified: new Date(),

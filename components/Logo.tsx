@@ -40,25 +40,25 @@ export function Logo({ className = "" }: { className?: string }) {
             fill="none"
           />
 
-          {/* Equalizer bars (orange) */}
-          <rect x="18" y="32" width="4" height="8" rx="1" fill="#f97316" />
-          <rect x="24" y="26" width="4" height="14" rx="1" fill="#f97316" />
-          <rect x="30" y="20" width="4" height="20" rx="1" fill="#f97316" />
-          <rect x="36" y="14" width="4" height="26" rx="1" fill="#f97316" />
+          {/* Equalizer bars (purple) */}
+          <rect x="18" y="32" width="4" height="8" rx="1" fill="#8b5cf6" />
+          <rect x="24" y="26" width="4" height="14" rx="1" fill="#8b5cf6" />
+          <rect x="30" y="20" width="4" height="20" rx="1" fill="#8b5cf6" />
+          <rect x="36" y="14" width="4" height="26" rx="1" fill="#8b5cf6" />
 
           {/* Stem line (gray) */}
           <line x1="46" y1="8" x2="46" y2="52" stroke="currentColor" className="text-muted-foreground/50" strokeWidth="2" strokeLinecap="round" />
 
-          {/* Flag (orange) */}
-          <path d="M46 8l12 5-12 5z" fill="#f97316" />
+          {/* Flag (purple) */}
+          <path d="M46 8l12 5-12 5z" fill="#8b5cf6" />
 
-          {/* Circular note head (orange) */}
-          <circle cx="40" cy="52" r="8" stroke="#f97316" strokeWidth="2.5" fill="none" />
+          {/* Circular note head (purple) */}
+          <circle cx="40" cy="52" r="8" stroke="#8b5cf6" strokeWidth="2.5" fill="none" />
 
-          {/* Swoosh curve (orange) */}
+          {/* Swoosh curve (purple) */}
           <path
             d="M48 48c6-8 14-10 20-6"
-            stroke="#f97316"
+            stroke="#8b5cf6"
             strokeWidth="2"
             strokeLinecap="round"
             fill="none"
@@ -69,7 +69,7 @@ export function Logo({ className = "" }: { className?: string }) {
       {/* Text Logo */}
       <div className="flex items-baseline gap-0.5 leading-none">
         <span className="text-xl font-bold tracking-tight text-foreground">Lyric Generator</span>
-        <span className="text-xl font-bold text-orange-500">.cc</span>
+        <span className="text-xl font-bold text-[#8b5cf6]">.cc</span>
       </div>
     </div>
   )
@@ -117,25 +117,25 @@ export function LogoCompact({ className = "" }: { className?: string }) {
             fill="none"
           />
 
-          {/* Equalizer bars (orange) */}
-          <rect x="18" y="32" width="4" height="8" rx="1" fill="#f97316" />
-          <rect x="24" y="26" width="4" height="14" rx="1" fill="#f97316" />
-          <rect x="30" y="20" width="4" height="20" rx="1" fill="#f97316" />
-          <rect x="36" y="14" width="4" height="26" rx="1" fill="#f97316" />
+          {/* Equalizer bars (purple) */}
+          <rect x="18" y="32" width="4" height="8" rx="1" fill="#8b5cf6" />
+          <rect x="24" y="26" width="4" height="14" rx="1" fill="#8b5cf6" />
+          <rect x="30" y="20" width="4" height="20" rx="1" fill="#8b5cf6" />
+          <rect x="36" y="14" width="4" height="26" rx="1" fill="#8b5cf6" />
 
           {/* Stem line (gray) */}
           <line x1="46" y1="8" x2="46" y2="52" stroke="currentColor" className="text-muted-foreground/50" strokeWidth="2" strokeLinecap="round" />
 
-          {/* Flag (orange) */}
-          <path d="M46 8l12 5-12 5z" fill="#f97316" />
+          {/* Flag (purple) */}
+          <path d="M46 8l12 5-12 5z" fill="#8b5cf6" />
 
-          {/* Circular note head (orange) */}
-          <circle cx="40" cy="52" r="8" stroke="#f97316" strokeWidth="2.5" fill="none" />
+          {/* Circular note head (purple) */}
+          <circle cx="40" cy="52" r="8" stroke="#8b5cf6" strokeWidth="2.5" fill="none" />
 
-          {/* Swoosh curve (orange) */}
+          {/* Swoosh curve (purple) */}
           <path
             d="M48 48c6-8 14-10 20-6"
-            stroke="#f97316"
+            stroke="#8b5cf6"
             strokeWidth="2"
             strokeLinecap="round"
             fill="none"
@@ -144,7 +144,7 @@ export function LogoCompact({ className = "" }: { className?: string }) {
       </div>
       <div className="flex items-baseline gap-0.5 leading-none">
         <span className="text-lg font-bold text-foreground">Lyric Gen</span>
-        <span className="text-lg font-bold text-orange-500">.cc</span>
+        <span className="text-lg font-bold text-[#8b5cf6]">.cc</span>
       </div>
     </div>
   )

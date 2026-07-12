@@ -1,8 +1,19 @@
 "use client"
 
 import { Music, Sliders, Sparkles, Download, ArrowRight } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import type { ReactNode } from "react"
 
-const steps = [
+type HowItWorksStep = {
+  step: number
+  title: string
+  description: string
+  icon: LucideIcon
+  color: string
+}
+
+const defaultSteps: HowItWorksStep[] = [
   {
     step: 1,
     title: "Choose Your Style",
@@ -22,7 +33,7 @@ const steps = [
     title: "Generate with AI",
     description: "Our AI creates unique, original lyrics in seconds. Watch as professional song structures come to life.",
     icon: Sparkles,
-    color: "from-amber-500 to-orange-600",
+    color: "from-fuchsia-500 to-pink-600",
   },
   {
     step: 4,
@@ -33,11 +44,21 @@ const steps = [
   },
 ]
 
-export function HowItWorks() {
+interface HowItWorksProps {
+  steps?: HowItWorksStep[]
+  title?: ReactNode
+  lede?: string
+}
+
+export function HowItWorks(props: HowItWorksProps = {}) {
+  const steps = props.steps || defaultSteps
+  const title = props.title || <>Create Lyrics in <span className="text-gradient">4 Simple Steps</span></>
+  const lede = props.lede || 'Our intuitive process makes songwriting easy for everyone, from beginners to professionals'
+
   return (
-    <section id="how-it-works" className="py-20 md:py-28 relative overflow-hidden">
+    <section id="how-it-works" className="py-14 md:py-20 relative overflow-hidden" style={{ background: "var(--soft)" }}>
       {/* Background */}
-      <div className="absolute inset-0 -z-10 bg-muted/30" />
+      <div className="absolute inset-0 -z-10" />
 
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
@@ -47,10 +68,10 @@ export function HowItWorks() {
               How It Works
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-balance mb-4">
-              Create Lyrics in <span className="text-gradient">4 Simple Steps</span>
+              {title}
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Our intuitive process makes songwriting easy for everyone, from beginners to professionals
+              {lede}
             </p>
           </div>
 
@@ -120,13 +141,12 @@ export function HowItWorks() {
           {/* CTA */}
           <div className="text-center mt-16">
             <p className="text-muted-foreground mb-4">Ready to create your first song?</p>
-            <a
-              href="#generator"
-              className="inline-flex items-center gap-2 text-primary font-semibold hover:underline group"
-            >
-              Start generating now
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </a>
+            <Button asChild className="rounded-full bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:opacity-90 text-white px-6 shadow-lg shadow-[#8b5cf6]/25">
+              <a href="#generator" className="inline-flex items-center gap-2 group">
+                Start generating now
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </Button>
           </div>
         </div>
       </div>
