@@ -6,24 +6,15 @@ Repo: https://github.com/heatsing/LyricGenerator
 
 ## 1. Can this SaaS operate in production today?
 
-**Code is ready to deploy on top of the existing ranked site.** Public SEO URLs stay public. Paid live checkout still needs Vercel `PAYPAL_MODE=live`, hosted database, and this commit on `main`.
+**Partially.** The SaaS UI and billing routes are deployed on the existing ranked site. Public homepage SEO is intact. Paid checkout cannot go live until Vercel has `PAYPAL_MODE=live` and a hosted database. Public lyric generation currently 500s on the first SaaS deploy; a hotfix is committed locally.
 
 ## 2. Login
 
-**Code: yes. Production: needs env + hosted DB.**
-
-Working locally: sign up, login, logout, 30-day session, forgot/reset, email verification link, `/account`. Google OAuth on `/login` is unchanged.
+**Code deployed. Production DB is not durable.** `/login` is live. Account APIs 500 without hosted libSQL.
 
 ## 3. Payments
 
-**Sandbox: ready locally. Live: plans created; production must use `PAYPAL_MODE=live`.**
-
-- Return URL does not grant access
-- Webhook + PayPal API are the source of truth
-- Local default stays sandbox so development does not charge real money
-- Live app name: Lyrics Generator
-
-Live plans:
+Live PayPal plans exist in `.env.local`. They are not on Vercel yet. Local `PAYPAL_MODE` stays sandbox.
 
 | Plan | Price | PayPal plan id |
 | --- | --- | --- |
@@ -32,28 +23,17 @@ Live plans:
 | Premium monthly | $16.00 | `P-4U428262JP4647148NKXLORA` |
 | Premium yearly | $96.00 | `P-1N575623B09131146NKXLORI` |
 
-Secrets stay in `.env.local` only. They are never committed.
+Webhook: `https://lyricgenerator.cc/api/billing/webhook` (id `5GR70029125121704`). Return URL does not grant access.
 
-## 4. Webhooks
+## 4. Git / deploy
 
-`POST https://lyricgenerator.cc/api/billing/webhook`
+- Pushed: `24997ca` feat SaaS on `main` (Vercel production success)
+- Local unpushed: `ea776c4` generator hotfix (`file:/tmp` on Vercel + fail-open)
+- GitHub:443 from this machine later timed out; Vercel CLI device login was opened
 
-- Sandbox webhook id: `1JE460846T859983K`
-- Live webhook id: `5GR70029125121704`
-- Signature verification + idempotency implemented
-- Production deploy must include `/api/billing/webhook` before live events succeed
+## 5. SEO
 
-## 5. Production environment
-
-| Check | Result |
-| --- | --- |
-| Existing SEO routes | Unchanged and public |
-| GitHub remote | `origin` → https://github.com/heatsing/LyricGenerator (`main`) |
-| PayPal sandbox | Done |
-| PayPal live token/plans/webhook | Done in `.env.local` |
-| Hosted DB | In progress |
-| Email delivery | Missing (dev logs the link) |
-| Vercel env / deploy of SaaS routes | In progress after push |
+Existing public URLs, titles, and homepage copy were not replaced. `/pricing` was added. robots still allow `/`.
 
 ## 6. Plans
 
@@ -65,14 +45,6 @@ Secrets stay in `.env.local` only. They are never committed.
 | Premium monthly | $16 | 120/day, 3 devices | Yes | No |
 | Premium yearly | $96 | 120/day, 3 devices | Yes | Yes |
 
-Modeled after https://www.gsong.ai/pricing/ (annual commercial rights, Premium ≈ 3× Basic).
+## 7. Next (no extra owner questions except the open OAuth window)
 
-## 7. What paid users get
-
-Server-enforced: higher daily quota, lyrics-to-song, saved history. Commercial flag only on yearly plans.
-
-## 8. Blockers being handled without owner input
-
-1. Push SaaS commit to `main` (GitHub git credentials already work)
-2. Create hosted libSQL/Turso and set Vercel production env
-3. Confirm lyricgenerator.cc deploy
+Set Vercel production env and hosted DB as soon as the CLI session exists, then deploy the generator hotfix.
