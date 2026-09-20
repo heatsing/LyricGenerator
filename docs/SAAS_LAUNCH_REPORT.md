@@ -6,31 +6,32 @@ Repo: https://github.com/heatsing/LyricGenerator
 
 ## 1. Can this SaaS operate in production today?
 
-**Billing/auth code is live. Public SEO pages are intact.** Paid checkout env is on Vercel (`PAYPAL_MODE=live`). Durable database is still ephemeral `/tmp` SQLite on Vercel. Public lyric API cannot call DeepSeek because that key returns insufficient balance.
+**Public site and generate APIs: yes.** Auth/billing code is live. User and subscription rows will not survive Vercel deploys until a hosted database is attached. PayPal live credentials are on Vercel (`PAYPAL_MODE=live`).
 
 ## 2. Login
 
-`/login` is live. `/api/account/me` returns 401 when signed out (route is healthy). Google client id is set; Google client secret was not present in the project.
+`/login` is public. Email register succeeds (`POST /api/auth/register` 200). Session-protected billing returns 401 until sign-in. Google client id is set; Google client secret is still missing.
 
 ## 3. Payments
 
-Live and sandbox PayPal credentials, webhook id `5GR70029125121704`, and GSong plan ids are on Vercel production. Return URL does not grant access.
+Live + sandbox PayPal env is on Vercel. Unsigned webhook calls return 401. Create-subscription requires a session.
 
-| Plan | Price | PayPal plan id |
-| --- | --- | --- |
-| Basic monthly | $9.70 | `P-7SK23358BU6089700NKXLOQY` |
-| Basic yearly | $58.20 | `P-6P497186U7451625PNKXLORA` |
-| Premium monthly | $16.00 | `P-4U428262JP4647148NKXLORA` |
-| Premium yearly | $96.00 | `P-1N575623B09131146NKXLORI` |
+## 4. Generate (after DeepSeek recharge)
 
-## 4. SEO
+| API | Result |
+| --- | --- |
+| `/api/generate-lyrics` | 200, lyrics payload |
+| `/api/generate-poem` | 200 |
+| `/api/generate-story` | 200 |
 
-Homepage title remains `Free AI Lyrics Generator | Create Song Lyrics Online`. Ranked routes `/`, `/poem-generator`, `/genre/pop` return 200. `/pricing` is additive.
+## 5. SEO
 
-## 5. Environment
+Homepage title remains `Free AI Lyrics Generator | Create Song Lyrics Online`. `/`, `/poem-generator`, `/story-generator`, `/genre/pop` are 200 without login. `robots.txt` allows `/`.
 
-Set on Vercel production/preview/development. Nothing secret was committed.
+## 6. Database
 
-## 6. Remaining owner-only blocker
+No durable `DATABASE_URL` yet. Vercel Neon install is waiting on marketplace terms. Turso CLI is not usable on this Windows/WSL setup. Until Neon is accepted, SQLite lives in `/tmp` and resets across instances.
 
-DeepSeek API balance is empty. Public generate cannot succeed until that account is funded.
+## 7. Remaining owner-only step
+
+Accept Neon terms in the already-opened Vercel window so a hosted database can be provisioned.

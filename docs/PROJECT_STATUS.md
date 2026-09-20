@@ -4,24 +4,28 @@ Last updated: 2026-09-20
 
 ## Now
 
-SaaS is live on https://lyricgenerator.cc. Production env (PayPal live+sandbox, NEXTAUTH, OPENAI_API_KEY) is on Vercel. Public pages and `/pricing` are up. `/api/account/me` returns 401 (auth alive). Public generate is blocked by DeepSeek `402 Insufficient Balance`, not by SQLite. Hosted Turso is still missing; Vercel uses `/tmp` SQLite as a temporary fallback.
+Public generate is healthy after DeepSeek recharge. Homepage/pricing/login stay public. Auth register and billing-without-session behave correctly. Durable hosted DB is blocked on Neon marketplace terms in the Vercel dashboard; production still uses ephemeral `/tmp` SQLite until that is accepted.
 
 ## Done
 
-- GitHub `main` includes SaaS + generator hotfix (`c1d943d`)
-- Vercel production deploy aliased to lyricgenerator.cc
-- Production env set via API (secrets not committed)
-- Live PayPal plan ids and webhook id on Vercel with `PAYPAL_MODE=live`
-- Sandbox PayPal ids kept on Vercel too
+- GitHub `main` has SaaS + generator hotfix + webhook harden
+- Vercel production env: PayPal live+sandbox, NEXTAUTH, OPENAI_API_KEY
+- `PAYPAL_MODE=live` on Vercel
 - Existing SEO homepage title/copy unchanged
-- `/login`, `/pricing`, `/poem-generator`, `/genre/pop` return 200
+- Public generate APIs after recharge:
+  - `/api/generate-lyrics` 200
+  - `/api/generate-poem` 200
+  - `/api/generate-story` 200
+- `/`, `/pricing`, `/login`, `/poem-generator`, `/story-generator`, `/genre/pop` 200
+- `robots.txt` allows `/`; auth/account/api disallowed
+- `/api/auth/register` 200; `/api/billing/create-subscription` 401 without session
+- `/api/account/me` 401 unsigned (healthy)
 
 ## Remaining
 
-1. DeepSeek account has no balance (public generate 503/500 until topped up)
-2. Durable hosted libSQL/Turso (Windows Turso CLI needs WSL; marketplace slug not available)
-3. Google OAuth secret was never in the repo, so Google login may still be incomplete
-4. Email provider
+1. Accept Neon terms in Vercel so a durable Postgres can replace `/tmp` SQLite
+2. Google OAuth client secret was never in the repo
+3. Email provider
 
 ## Test results (local)
 
