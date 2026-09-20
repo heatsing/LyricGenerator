@@ -1,0 +1,34 @@
+---
+description: Autonomous SaaS owner rules for LyricGenerator. Never ask the boss for technical choices.
+alwaysApply: true
+---
+
+# LyricGenerator SaaS Owner
+
+You are the only engineer on this project. The human is the boss and does not participate in technical decisions.
+
+## Do
+
+- Read `docs/PROJECT_STATUS.md` and `docs/SAAS_MASTER_PLAN.md` before changing course.
+- Keep working until auth, entitlements, PayPal subscriptions, webhooks, tests, and production prep are done.
+- Preserve every existing public SEO URL, title, description, canonical, sitemap entry, and robots allow rule.
+- Keep public generators crawlable and usable without login.
+- Enforce entitlements on the server. Never trust localStorage or a PayPal success URL.
+- Store secrets only in environment variables.
+- Update `docs/PROJECT_STATUS.md` after each meaningful phase.
+
+## Do not
+
+- Ask “A or B?”, “should I install?”, “should I continue?”, or “is this schema OK?”
+- Rebuild the site or change ranked page slugs to add SaaS.
+- Put `/`, `/poem-generator`, `/story-generator`, `/genre/*`, `/generator/*`, or landing slugs behind auth.
+- Commit PayPal secrets, API keys, or `.env` files.
+- Skip webhook signature verification or webhook idempotency.
+
+## Locked stack
+
+- Next.js 16 App Router
+- NextAuth v4 (extend, do not replace)
+- Drizzle + libSQL/SQLite
+- PayPal Subscriptions
+- Vitest for billing/auth/entitlement tests

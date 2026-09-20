@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import Link from "next/link"
 import { Logo } from "@/components/Logo"
 import { Button } from "@/components/ui/button"
@@ -10,21 +9,27 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLogin, setIsLogin] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/"
 
   const handleGoogleLogin = async () => {
     setIsLoading(true)
+    setError("")
     try {
-      await signIn("google", { callbackUrl: "/" })
-    } catch (error) {
-      console.error("Google login error:", error)
+      await signIn("google", { callbackUrl })
+    } catch (err) {
+      console.error("Google login error:", err)
+      setError("Google sign-in failed. Try again.")
     } finally {
       setIsLoading(false)
     }
@@ -33,38 +38,37 @@ export default function LoginPage() {
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
 
     try {
-      if (isLogin) {
-        // Login with credentials
-        const result = await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
+      if (!isLogin) {
+        const register = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
         })
-
-        if (result?.ok) {
-          router.push("/")
-        } else {
-          alert("Login failed. Please check your credentials.")
-        }
-      } else {
-        // Registration - in production, call your registration API
-        alert("Registration: In production, this would create a new user account.")
-        // After registration, automatically log in
-        const result = await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
-        })
-
-        if (result?.ok) {
-          router.push("/")
+        const data = await register.json()
+        if (!register.ok) {
+          setError(data.error || "Registration failed.")
+          return
         }
       }
-    } catch (error) {
-      console.error("Authentication error:", error)
-      alert("An error occurred. Please try again.")
+
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.ok) {
+        router.push(callbackUrl)
+        router.refresh()
+      } else {
+        setError(isLogin ? "Login failed. Check your email and password." : "Account created, but sign-in failed. Try logging in.")
+      }
+    } catch (err) {
+      console.error("Authentication error:", err)
+      setError("An error occurred. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -73,12 +77,10 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-background via-background to-muted flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
-        {/* Logo */}
         <Link href="/" className="flex items-center justify-center">
           <Logo />
         </Link>
 
-        {/* Login Card */}
         <Card className="p-8 border-2">
           <div className="space-y-6">
             <div className="text-center space-y-2">
@@ -88,7 +90,6 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Google Login */}
             <Button
               onClick={handleGoogleLogin}
               variant="outline"
@@ -126,7 +127,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Email/Password Form */}
             <form onSubmit={handleEmailSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -150,36 +150,39 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  minLength={8}
                   disabled={isLoading}
                 />
               </div>
 
               {isLogin && (
                 <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded border-border" />
-                    <span className="text-muted-foreground">Remember me</span>
-                  </label>
-                  <a href="#" className="text-primary hover:underline">
+                  <span className="text-muted-foreground">Minimum 8 characters</span>
+                  <Link href="/forgot-password" className="text-primary hover:underline">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               )}
+
+              {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
               <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
                 {isLoading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
               </Button>
             </form>
 
-            {/* Toggle Login/Register */}
             <div className="text-center text-sm">
               <span className="text-muted-foreground">
                 {isLogin ? "Don't have an account? " : "Already have an account? "}
               </span>
               <button
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin)
+                  setError("")
+                }}
                 className="text-primary hover:underline font-medium"
                 disabled={isLoading}
+                type="button"
               >
                 {isLogin ? "Sign up" : "Sign in"}
               </button>
@@ -187,18 +190,25 @@ export default function LoginPage() {
           </div>
         </Card>
 
-        {/* Terms */}
         <p className="text-center text-xs text-muted-foreground">
           By continuing, you agree to our{" "}
-          <a href="#" className="underline hover:text-foreground">
+          <Link href="/terms" className="underline hover:text-foreground">
             Terms of Service
-          </a>{" "}
+          </Link>{" "}
           and{" "}
-          <a href="#" className="underline hover:text-foreground">
+          <Link href="/privacy" className="underline hover:text-foreground">
             Privacy Policy
-          </a>
+          </Link>
         </p>
       </div>
     </main>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen" />}>
+      <LoginForm />
+    </Suspense>
   )
 }

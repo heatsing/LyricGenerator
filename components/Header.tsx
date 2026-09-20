@@ -61,6 +61,12 @@ export function Header() {
           >
             Short Story Generator
           </Link>
+          <Link
+            href="/pricing"
+            className="relative px-4 py-2 text-sm text-muted-foreground hover:text-[#8b5cf6] transition-colors"
+          >
+            Pricing
+          </Link>
           <div className="w-px h-6 bg-border mx-2" />
           <LanguageSwitcher />
           <ThemeToggle />
@@ -74,6 +80,16 @@ export function Header() {
                   className="w-8 h-8 rounded-full border border-[#dceaf2]"
                 />
               )}
+              <Link href="/account">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="rounded-full border-[#dceaf2] bg-white hover:bg-[#EEF8FC] text-foreground px-4 shadow-none"
+                >
+                  <User className="w-4 h-4 mr-1.5" />
+                  Account
+                </Button>
+              </Link>
               <Button
                 size="sm"
                 variant="outline"
@@ -130,6 +146,13 @@ export function Header() {
           >
             Short Story Generator
           </Link>
+          <Link
+            href="/pricing"
+            className="text-base text-muted-foreground hover:text-foreground py-3 px-4 min-h-[44px] flex items-center rounded-xl hover:bg-primary/10 transition-colors"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Pricing
+          </Link>
           <div className="h-px bg-border my-2" />
           <div className="flex items-center gap-4 px-4 py-2">
             <LanguageSwitcher />
@@ -148,6 +171,12 @@ export function Header() {
               <span className="text-sm text-muted-foreground flex-1 truncate">
                 {session?.user?.name || session?.user?.email}
               </span>
+              <Link href="/account" onClick={() => setMobileMenuOpen(false)}>
+                <Button size="sm" variant="outline" className="rounded-full">
+                  <User className="w-4 h-4 mr-1.5" />
+                  Account
+                </Button>
+              </Link>
               <Button
                 size="sm"
                 variant="outline"

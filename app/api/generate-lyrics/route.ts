@@ -1,7 +1,12 @@
+import { afterGeneration, deepseekKey, withGenerationGuard } from "@/lib/generation"
+
 export const maxDuration = 30
 
 export async function POST(req: Request) {
   try {
+    const guard = await withGenerationGuard(req, "lyrics")
+    if (!guard.ok) return guard.response
+
     const { genre, mood, theme, topic, length, language } = await req.json()
 
     const lengthInstructions = {
@@ -67,7 +72,7 @@ REQUIRED OUTPUT FORMAT EXAMPLE:
 
 Generate the complete song lyrics now with proper structure labels and formatting:`
 
-    const apiKey = process.env.OPENAI_API_KEY || "sk-e9052c75601b4ba1804d5f7a9958151c"
+    const apiKey = deepseekKey()
 
     const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
       method: "POST",
@@ -99,6 +104,14 @@ Generate the complete song lyrics now with proper structure labels and formattin
 
     const data = await response.json()
     const lyrics = data.choices[0].message.content
+    await afterGeneration({
+      userId: guard.session?.user.id ?? null,
+      ip: guard.ip,
+      action: "lyrics",
+      input: { genre, mood, theme, topic, length, language },
+      output: lyrics,
+      historyLimit: guard.entitlements.historyLimit,
+    })
 
     return Response.json({ lyrics })
   } catch (error) {

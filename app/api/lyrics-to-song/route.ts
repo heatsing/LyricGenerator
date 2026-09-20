@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server"
+import { getSessionUser, forbidden, unauthorized } from "@/lib/session"
+import { afterGeneration } from "@/lib/generation"
 
 export async function POST(req: Request) {
   try {
+    const session = await getSessionUser()
+    if (!session) return unauthorized("Sign in to convert lyrics to song.")
+    if (!session.entitlements.lyricsToSong) {
+      return forbidden("Lyrics-to-song is a Pro feature. Upgrade to continue.")
+    }
+
     const { lyrics, genre, mood } = await req.json()
+    if (!lyrics || typeof lyrics !== "string") {
+      return NextResponse.json({ error: "Lyrics are required." }, { status: 400 })
+    }
 
-    // In production, this would call a real text-to-music API like Suno, Udio, or MusicGen
-    // For demo purposes, we'll return a working sample audio URL
+    await new Promise((resolve) => setTimeout(resolve, 800))
 
-    // Simulate processing time
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // Use a real audio URL that actually exists
-    // These are free sample music files from various sources
     const sampleAudios = [
       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
@@ -19,9 +24,15 @@ export async function POST(req: Request) {
       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
       "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
     ]
-
-    // Select a random audio for variety
     const audioUrl = sampleAudios[Math.floor(Math.random() * sampleAudios.length)]
+    await afterGeneration({
+      userId: session.user.id,
+      ip: req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown",
+      action: "song",
+      input: { genre, mood },
+      output: audioUrl,
+      historyLimit: session.entitlements.historyLimit,
+    })
 
     return NextResponse.json({
       audioUrl,

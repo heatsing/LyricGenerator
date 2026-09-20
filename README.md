@@ -27,7 +27,7 @@ R&B, Rock, Pop, Rap, Elementary School Songs, Folk, Jazz, K-Pop, Country, Diss T
 
 | 变量名 | 说明 | 示例值 |
 |--------|------|--------|
-| `OPENAI_API_KEY` | DeepSeek API Key | `sk-e9052c75601b4ba1804d5f7a9958151c` |
+| `OPENAI_API_KEY` | DeepSeek API Key | set in Vercel / local env |
 | `NEXT_PUBLIC_SITE_URL` | 网站 URL（用于站点地图）| `https://your-domain.vercel.app` |
 
 4. 确保选择所有环境：Production, Preview, Development

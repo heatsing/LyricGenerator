@@ -34,7 +34,7 @@ git push origin main
 在 Vercel 项目设置中添加环境变量：
 
 ```
-OPENAI_API_KEY=sk-e9052c75601b4ba1804d5f7a9958151c
+OPENAI_API_KEY=
 ```
 
 步骤：
@@ -42,7 +42,7 @@ OPENAI_API_KEY=sk-e9052c75601b4ba1804d5f7a9958151c
 2. 选择 "Environment Variables"
 3. 添加变量：
    - **Name**: `OPENAI_API_KEY`
-   - **Value**: `sk-e9052c75601b4ba1804d5f7a9958151c`
+   - **Value**: your DeepSeek API key
    - **Environment**: Production, Preview, Development (全选)
 4. 点击 "Save"
 
@@ -103,7 +103,7 @@ OPENAI_API_KEY=sk-e9052c75601b4ba1804d5f7a9958151c
 npm install
 
 # 创建 .env.local 文件
-echo "OPENAI_API_KEY=sk-e9052c75601b4ba1804d5f7a9958151c" > .env.local
+echo "OPENAI_API_KEY=" > .env.local
 
 # 运行开发服务器
 npm run dev

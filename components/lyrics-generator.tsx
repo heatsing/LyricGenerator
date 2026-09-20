@@ -143,6 +143,13 @@ export default function LyricsGenerator({ presetGenre }: LyricsGeneratorProps) {
 
       clearInterval(progressInterval)
 
+      if (response.status === 429) {
+        toast({
+          title: "Daily limit reached",
+          description: "Sign in or upgrade to Pro for a higher generation quota.",
+        })
+        return
+      }
       if (!response.ok) {
         throw new Error("Failed to generate lyrics")
       }
@@ -185,6 +192,20 @@ export default function LyricsGenerator({ presetGenre }: LyricsGeneratorProps) {
         }),
       })
 
+      if (response.status === 401) {
+        toast({
+          title: "Sign in required",
+          description: "Log in, then upgrade to Pro to convert lyrics to song.",
+        })
+        return
+      }
+      if (response.status === 402) {
+        toast({
+          title: "Pro feature",
+          description: "Lyrics-to-song is included with Pro. Open Pricing to upgrade.",
+        })
+        return
+      }
       if (!response.ok) {
         throw new Error("Failed to convert to song")
       }

@@ -1,11 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { afterGeneration, deepseekKey, withGenerationGuard } from "@/lib/generation"
 
 export async function POST(request: NextRequest) {
   try {
+    const guard = await withGenerationGuard(request, "story")
+    if (!guard.ok) return guard.response
+
     const body = await request.json()
     const { genre, theme, mood, keywords, length } = body
 
-    const apiKey = process.env.OPENAI_API_KEY || "sk-e9052c75601b4ba1804d5f7a9958151c"
+    const apiKey = deepseekKey()
 
     const wordCount = length === "short" ? 500 : length === "medium" ? 1000 : 1500
 
@@ -38,6 +42,14 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json()
     const story = data.choices[0].message.content
+    await afterGeneration({
+      userId: guard.session?.user.id ?? null,
+      ip: guard.ip,
+      action: "story",
+      input: { genre, theme, mood, keywords, length },
+      output: story,
+      historyLimit: guard.entitlements.historyLimit,
+    })
 
     return NextResponse.json({ story })
   } catch (error) {
