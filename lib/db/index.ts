@@ -10,7 +10,11 @@ let cached: { url: string; db: AppDb; client: Client } | null = null
 let migratedUrl: string | null = null
 
 export function getDatabaseUrl() {
-  return process.env.DATABASE_URL || "file:./data/app.db"
+  const configured = process.env.DATABASE_URL || "file:./data/app.db"
+  if (configured.startsWith("file:") && process.env.VERCEL) {
+    return "file:/tmp/lyricgenerator.db"
+  }
+  return configured
 }
 
 function ensureLocalDir(url: string) {

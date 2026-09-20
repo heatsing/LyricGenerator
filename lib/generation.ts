@@ -4,26 +4,35 @@ import { resolveEntitlements } from "./entitlements"
 import { saveGeneration } from "./users"
 
 export async function withGenerationGuard(req: Request, action: "lyrics" | "poem" | "story" | "song") {
-  const session = await getSessionUser()
-  const entitlements = session?.entitlements ?? resolveEntitlements(null)
   const ip = clientIp(req)
-  const quota = await assertGenerationQuota({
-    userId: session?.user.id ?? null,
-    ip,
-    entitlements,
-  })
-  if (!quota.allowed) {
-    return {
-      ok: false as const,
-      response: Response.json(
-        {
-          error: "Daily generation limit reached. Sign in or upgrade to Pro for more.",
-          code: "RATE_LIMITED",
-          limit: quota.limit,
-        },
-        { status: 429 },
-      ),
+  let session = null
+  try {
+    session = await getSessionUser()
+  } catch {
+    session = null
+  }
+  const entitlements = session?.entitlements ?? resolveEntitlements(null)
+  try {
+    const quota = await assertGenerationQuota({
+      userId: session?.user.id ?? null,
+      ip,
+      entitlements,
+    })
+    if (!quota.allowed) {
+      return {
+        ok: false as const,
+        response: Response.json(
+          {
+            error: "Daily generation limit reached. Sign in or upgrade to Pro for more.",
+            code: "RATE_LIMITED",
+            limit: quota.limit,
+          },
+          { status: 429 },
+        ),
+      }
     }
+  } catch {
+    // Public generators must stay up if the hosted database is not ready yet.
   }
   return {
     ok: true as const,
@@ -42,9 +51,13 @@ export async function afterGeneration(opts: {
   output: string
   historyLimit: number | null
 }) {
-  await recordUsage(opts.userId ?? null, opts.ip, opts.action)
-  if (opts.userId) {
-    await saveGeneration(opts.userId, opts.action, opts.input, opts.output, opts.historyLimit)
+  try {
+    await recordUsage(opts.userId ?? null, opts.ip, opts.action)
+    if (opts.userId) {
+      await saveGeneration(opts.userId, opts.action, opts.input, opts.output, opts.historyLimit)
+    }
+  } catch {
+    // Usage history is best-effort until production DATABASE_URL is set.
   }
 }
 
