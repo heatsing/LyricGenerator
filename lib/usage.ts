@@ -1,7 +1,6 @@
 import { and, eq, gte, or, sql } from "drizzle-orm"
 import { hashIp, newId } from "./crypto"
-import { ensureMigrated, getDb } from "./db"
-import { usageEvents } from "./db/schema"
+import { ensureMigrated, getDb, getTables } from "./db"
 import { ANONYMOUS_DAILY_LIMIT } from "./plans"
 import type { EntitlementSnapshot } from "./entitlements"
 
@@ -21,6 +20,7 @@ export async function countTodayUsage(userId: string | null, ip: string) {
   await ensureMigrated()
   const start = dayStart()
   const ipHash = hashIp(ip)
+  const { usageEvents } = getTables()
   const rows = await getDb()
     .select({ count: sql<number>`count(*)` })
     .from(usageEvents)
@@ -35,6 +35,7 @@ export async function countTodayUsage(userId: string | null, ip: string) {
 
 export async function recordUsage(userId: string | null, ip: string, action: string) {
   await ensureMigrated()
+  const { usageEvents } = getTables()
   await getDb().insert(usageEvents).values({
     id: newId(),
     userId,

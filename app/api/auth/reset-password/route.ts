@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server"
 import { eq } from "drizzle-orm"
 import { consumeAuthToken } from "@/lib/users"
-import { getDb } from "@/lib/db"
-import { users } from "@/lib/db/schema"
+import { getDb, getTables } from "@/lib/db"
 import { hashPassword, validatePassword } from "@/lib/password"
 
 export async function POST(req: Request) {
@@ -17,6 +16,7 @@ export async function POST(req: Request) {
     const row = await consumeAuthToken(token, "password_reset")
     if (!row) return NextResponse.json({ error: "This reset link is invalid or expired." }, { status: 400 })
 
+    const { users } = getTables()
     await getDb()
       .update(users)
       .set({ passwordHash: await hashPassword(password), updatedAt: Date.now() })

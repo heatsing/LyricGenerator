@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm"
 import { newId } from "./crypto"
-import { ensureMigrated, getDb } from "./db"
-import { payments, subscriptions, webhookEvents } from "./db/schema"
+import { ensureMigrated, getDb, getTables } from "./db"
 import { mapPaypalStatus } from "./entitlements"
 import {
   approvalUrlFrom,
@@ -45,6 +44,7 @@ export async function upsertSubscriptionFromPaypal(input: {
   approvalUrl?: string | null
 }) {
   await ensureMigrated()
+  const { subscriptions } = getTables()
   const db = getDb()
   const now = Date.now()
   const planId = input.planId || planFromPaypalPlanId(input.paypal.plan_id)
@@ -95,6 +95,7 @@ export async function recordPayment(input: {
   status: string
 }) {
   await ensureMigrated()
+  const { payments } = getTables()
   if (input.paypalSaleId) {
     const [dup] = await getDb().select().from(payments).where(eq(payments.paypalSaleId, input.paypalSaleId)).limit(1)
     if (dup) return dup
@@ -115,6 +116,7 @@ export async function recordPayment(input: {
 
 export async function claimWebhookEvent(id: string, eventType: string, payload: unknown) {
   await ensureMigrated()
+  const { webhookEvents } = getTables()
   try {
     await getDb().insert(webhookEvents).values({
       id,

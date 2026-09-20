@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server"
 import { eq } from "drizzle-orm"
 import { consumeAuthToken } from "@/lib/users"
-import { getDb } from "@/lib/db"
-import { users } from "@/lib/db/schema"
+import { getDb, getTables } from "@/lib/db"
 
 export async function POST(req: Request) {
   try {
@@ -11,6 +10,7 @@ export async function POST(req: Request) {
     if (!token) return NextResponse.json({ error: "Token is required." }, { status: 400 })
     const row = await consumeAuthToken(token, "email_verify")
     if (!row) return NextResponse.json({ error: "This verification link is invalid or expired." }, { status: 400 })
+    const { users } = getTables()
     await getDb().update(users).set({ emailVerifiedAt: Date.now(), updatedAt: Date.now() }).where(eq(users.id, row.userId))
     return NextResponse.json({ ok: true })
   } catch (error) {

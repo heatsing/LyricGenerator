@@ -6,15 +6,15 @@ Repo: https://github.com/heatsing/LyricGenerator
 
 ## 1. Can this SaaS operate in production today?
 
-**Public site and generate APIs: yes.** Auth/billing code is live. User and subscription rows will not survive Vercel deploys until a hosted database is attached. PayPal live credentials are on Vercel (`PAYPAL_MODE=live`).
+**Yes for public site, generate APIs, auth, and durable user/subscription data.** Neon Postgres is attached on Vercel. Auth/billing rows persist across deploys. PayPal live credentials are on Vercel (`PAYPAL_MODE=live`). Google sign-in still lacks a client secret. Verify/reset emails log to the server unless SMTP/Resend is added.
 
 ## 2. Login
 
-`/login` is public. Email register succeeds (`POST /api/auth/register` 200). Session-protected billing returns 401 until sign-in. Google client id is set; Google client secret is still missing.
+`/login` is public. Email register writes to Neon (`POST /api/auth/register`). Duplicate email returns 409. Session-protected billing returns 401 until sign-in. Google client id is set; Google client secret is still missing.
 
 ## 3. Payments
 
-Live + sandbox PayPal env is on Vercel. Unsigned webhook calls return 401. Create-subscription requires a session.
+Live + sandbox PayPal env is on Vercel. Unsigned webhook calls return 401. Create-subscription requires a session. Subscription rows live in Neon `subscriptions`.
 
 ## 4. Generate (after DeepSeek recharge)
 
@@ -30,8 +30,8 @@ Homepage title remains `Free AI Lyrics Generator | Create Song Lyrics Online`. `
 
 ## 6. Database
 
-No durable `DATABASE_URL` yet. Vercel Neon install is waiting on marketplace terms. Turso CLI is not usable on this Windows/WSL setup. Until Neon is accepted, SQLite lives in `/tmp` and resets across instances.
+Neon (Vercel Marketplace) is the production database. `DATABASE_URL` / `POSTGRES_URL_NON_POOLING` are set on the Vercel project (not in git). Local development still uses SQLite `file:./data/app.db`. Schema includes `users`, `subscriptions`, `payments`, `webhook_events`, `auth_tokens`, `usage_events`, `generations`. Ephemeral `/tmp` SQLite is no longer the production store.
 
 ## 7. Remaining owner-only step
 
-Accept Neon terms in the already-opened Vercel window so a hosted database can be provisioned.
+None for database. Optional later: add a Google OAuth client secret, and an email provider for verify/reset mail.

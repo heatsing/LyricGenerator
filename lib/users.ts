@@ -1,23 +1,26 @@
 import { and, desc, eq, gt, isNull } from "drizzle-orm"
-import { ensureMigrated, getDb } from "./db"
-import { authTokens, generations, subscriptions, users } from "./db/schema"
+import { ensureMigrated, getDb, getTables } from "./db"
 import { newId, newToken, sha256 } from "./crypto"
 import { hashPassword } from "./password"
 import { resolveEntitlements, type EntitlementSnapshot } from "./entitlements"
 import type { EntitlementStatus, PlanId } from "./plans"
 
-export type UserRow = typeof users.$inferSelect
-export type SubscriptionRow = typeof subscriptions.$inferSelect
+const tables = () => getTables()
+
+export type UserRow = ReturnType<typeof tables>["users"]["$inferSelect"]
+export type SubscriptionRow = ReturnType<typeof tables>["subscriptions"]["$inferSelect"]
 
 export async function findUserByEmail(email: string) {
   await ensureMigrated()
   const db = getDb()
+  const { users } = tables()
   const [row] = await db.select().from(users).where(eq(users.email, email)).limit(1)
   return row ?? null
 }
 
 export async function findUserById(id: string) {
   await ensureMigrated()
+  const { users } = tables()
   const db = getDb()
   const [row] = await db.select().from(users).where(eq(users.id, id)).limit(1)
   return row ?? null
@@ -31,6 +34,7 @@ export async function createUser(input: {
   emailVerifiedAt?: number | null
 }) {
   await ensureMigrated()
+  const { users } = tables()
   const db = getDb()
   const now = Date.now()
   const row = {
@@ -54,6 +58,7 @@ export async function upsertGoogleUser(input: { email: string; name?: string | n
   const existing = await findUserByEmail(input.email)
   const now = Date.now()
   if (existing) {
+    const { users } = tables()
     await getDb()
       .update(users)
       .set({
@@ -75,6 +80,7 @@ export async function upsertGoogleUser(input: { email: string; name?: string | n
 
 export async function latestSubscription(userId: string) {
   await ensureMigrated()
+  const { subscriptions } = tables()
   const [row] = await getDb()
     .select()
     .from(subscriptions)
@@ -103,6 +109,7 @@ export async function updateUserEntitlement(
   },
 ) {
   await ensureMigrated()
+  const { users } = tables()
   await getDb()
     .update(users)
     .set({
@@ -116,6 +123,7 @@ export async function createAuthToken(userId: string, type: "email_verify" | "pa
   await ensureMigrated()
   const token = newToken()
   const now = Date.now()
+  const { authTokens } = tables()
   await getDb().insert(authTokens).values({
     id: newId(),
     userId,
@@ -130,6 +138,7 @@ export async function createAuthToken(userId: string, type: "email_verify" | "pa
 
 export async function consumeAuthToken(token: string, type: "email_verify" | "password_reset") {
   await ensureMigrated()
+  const { authTokens } = tables()
   const db = getDb()
   const now = Date.now()
   const [row] = await db
@@ -144,6 +153,7 @@ export async function consumeAuthToken(token: string, type: "email_verify" | "pa
 
 export async function saveGeneration(userId: string, type: string, input: unknown, output: string, historyLimit: number | null) {
   await ensureMigrated()
+  const { generations } = tables()
   const db = getDb()
   await db.insert(generations).values({
     id: newId(),
@@ -168,6 +178,7 @@ export async function saveGeneration(userId: string, type: string, input: unknow
 
 export async function listGenerations(userId: string, limit = 20) {
   await ensureMigrated()
+  const { generations } = tables()
   return getDb()
     .select()
     .from(generations)

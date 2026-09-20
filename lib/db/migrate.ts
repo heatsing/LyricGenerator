@@ -1,6 +1,6 @@
-import { getClient } from "./index"
+import { execSql, isPostgresUrl } from "./index"
 
-const STATEMENTS = [
+const SQLITE_STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
     email TEXT NOT NULL,
@@ -79,10 +79,29 @@ const STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS generations_user_created_idx ON generations(user_id, created_at)`,
 ]
 
+const POSTGRES_STATEMENTS = SQLITE_STATEMENTS.map((sql) =>
+  sql
+    .replaceAll("INTEGER NOT NULL DEFAULT 0", "INTEGER NOT NULL DEFAULT 0")
+    .replaceAll("email_verified_at INTEGER", "email_verified_at BIGINT")
+    .replaceAll("current_period_start INTEGER", "current_period_start BIGINT")
+    .replaceAll("current_period_end INTEGER", "current_period_end BIGINT")
+    .replaceAll("processed_at INTEGER", "processed_at BIGINT")
+    .replaceAll("expires_at INTEGER", "expires_at BIGINT")
+    .replaceAll("used_at INTEGER", "used_at BIGINT")
+    .replaceAll("created_at INTEGER", "created_at BIGINT")
+    .replaceAll("updated_at INTEGER", "updated_at BIGINT"),
+)
+
 export async function migrate() {
-  const client = getClient()
-  for (const sql of STATEMENTS) {
-    await client.execute(sql)
+  const statements = isPostgresUrl() ? POSTGRES_STATEMENTS : SQLITE_STATEMENTS
+  for (const [index, sql] of statements.entries()) {
+    try {
+      await execSql(sql)
+    } catch (error) {
+      const preview = sql.replace(/\s+/g, " ").slice(0, 80)
+      console.error(`migrate statement ${index} failed: ${preview}`)
+      throw error
+    }
   }
 }
 

@@ -16,9 +16,9 @@ Next.js Route Handlers
     ├─ /api/account/*      session required
     └─ /api/billing/*      session required except webhook
 
-Drizzle + libSQL
-    └─ file:./data/app.db locally
-       libsql / Turso in production via DATABASE_URL
+Drizzle
+    └─ SQLite / libSQL locally (`file:./data/app.db`)
+       Neon Postgres in production (`DATABASE_URL` / `POSTGRES_URL_NON_POOLING`)
 
 PayPal Subscriptions API
     └─ /api/billing/webhook  (signature + idempotency)
@@ -28,7 +28,7 @@ PayPal Subscriptions API
 
 - The production site is already Next.js 16. Replacing it would risk SEO.
 - NextAuth v4 is already in the tree. Extending it avoids a second login system.
-- libSQL uses SQLite locally so the product runs without the owner creating a cloud database first. The same client talks to Turso in production.
+- SQLite/libSQL locally so the product runs without a cloud database. Production uses Neon Postgres via the Vercel integration.
 - PayPal Subscriptions match a recurring SaaS. Webhooks are the only trusted payment signal.
 
 ## Data model

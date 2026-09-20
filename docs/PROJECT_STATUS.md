@@ -4,12 +4,12 @@ Last updated: 2026-09-20
 
 ## Now
 
-Public generate is healthy after DeepSeek recharge. Homepage/pricing/login stay public. Auth register and billing-without-session behave correctly. Durable hosted DB is blocked on Neon marketplace terms in the Vercel dashboard; production still uses ephemeral `/tmp` SQLite until that is accepted.
+Neon Postgres is provisioned and linked on Vercel. Users, subscriptions, and related tables are migrated. Production uses `DATABASE_URL` / Neon instead of ephemeral `/tmp` SQLite. Public generate, homepage, pricing, and login stay public.
 
 ## Done
 
-- GitHub `main` has SaaS + generator hotfix + webhook harden
-- Vercel production env: PayPal live+sandbox, NEXTAUTH, OPENAI_API_KEY
+- GitHub `main` has SaaS + generator hotfix + webhook harden + Neon Postgres adapter
+- Vercel production env: PayPal live+sandbox, NEXTAUTH, OPENAI_API_KEY, Neon `DATABASE_URL`
 - `PAYPAL_MODE=live` on Vercel
 - Existing SEO homepage title/copy unchanged
 - Public generate APIs after recharge:
@@ -20,12 +20,12 @@ Public generate is healthy after DeepSeek recharge. Homepage/pricing/login stay 
 - `robots.txt` allows `/`; auth/account/api disallowed
 - `/api/auth/register` 200; `/api/billing/create-subscription` 401 without session
 - `/api/account/me` 401 unsigned (healthy)
+- Neon schema migrated: `users`, `subscriptions`, `payments`, `webhook_events`, `auth_tokens`, `usage_events`, `generations`
 
 ## Remaining
 
-1. Accept Neon terms in Vercel so a durable Postgres can replace `/tmp` SQLite
-2. Google OAuth client secret was never in the repo
-3. Email provider
+1. Google OAuth client secret was never in the repo
+2. Email provider
 
 ## Test results (local)
 

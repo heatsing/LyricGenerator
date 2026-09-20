@@ -16,7 +16,7 @@ The site already ranks and has real traffic. SaaS is an additive layer. Public S
 | --- | --- | --- |
 | Framework | Keep Next.js 16 App Router | Already in production, SEO depends on it |
 | Auth | Extend NextAuth v4 | Already integrated (Google + JWT). Do not add Clerk/Better Auth |
-| Database | Drizzle + libSQL/SQLite | Works locally with zero hosted-DB setup; Turso-compatible for Vercel |
+| Database | Drizzle + SQLite locally / Neon Postgres in production | Local file DB; Vercel Neon for durable auth/billing |
 | Email | Nodemailer SMTP or Resend; console fallback | `nodemailer` is already a dependency |
 | Payments | PayPal Subscriptions | Owner requirement |
 | Plans | Free / Pro Monthly $9 / Pro Yearly $69 | Simple SaaS, low support cost |
@@ -129,10 +129,10 @@ Also: duplicate webhook, double checkout click, closed browser after pay, delaye
 
 These cannot be completed by code alone:
 
-1. PayPal Business login to create/confirm the app, webhook, and live credentials
-2. Hosted libSQL/Turso (or equivalent) `DATABASE_URL` on Vercel so auth/billing persist
+1. PayPal Business login to create/confirm the app, webhook, and live credentials — done
+2. Hosted Neon Postgres `DATABASE_URL` on Vercel so auth/billing persist — done
 3. SMTP or Resend so verify/reset emails leave the server
-4. Vercel env vars for `NEXTAUTH_SECRET`, PayPal, and `DATABASE_URL`
+4. Google OAuth client secret (optional; email/password login already works)
 
 Until those exist, local/sandbox code and tests must still be complete.
 

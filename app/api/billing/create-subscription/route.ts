@@ -1,7 +1,6 @@
 import { and, eq, gt } from "drizzle-orm"
 import { getSessionUser, unauthorized } from "@/lib/session"
-import { getDb } from "@/lib/db"
-import { subscriptions } from "@/lib/db/schema"
+import { getDb, getTables } from "@/lib/db"
 import { approvalUrlFrom, createPaypalSubscription, paypalConfigured } from "@/lib/paypal"
 import { upsertSubscriptionFromPaypal } from "@/lib/billing"
 import { parsePaidPlanId } from "@/lib/plans"
@@ -24,6 +23,7 @@ export async function POST(req: Request) {
     return Response.json({ error: "You already have this plan.", code: "ALREADY_SUBSCRIBED" }, { status: 409 })
   }
 
+  const { subscriptions } = getTables()
   const existing = await getDb()
     .select()
     .from(subscriptions)
