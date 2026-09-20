@@ -6,15 +6,15 @@ Repo: https://github.com/heatsing/LyricGenerator
 
 ## 1. Can this SaaS operate in production today?
 
-**Partially.** The SaaS UI and billing routes are deployed on the existing ranked site. Public homepage SEO is intact. Paid checkout cannot go live until Vercel has `PAYPAL_MODE=live` and a hosted database. Public lyric generation currently 500s on the first SaaS deploy; a hotfix is committed locally.
+**Billing/auth code is live. Public SEO pages are intact.** Paid checkout env is on Vercel (`PAYPAL_MODE=live`). Durable database is still ephemeral `/tmp` SQLite on Vercel. Public lyric API cannot call DeepSeek because that key returns insufficient balance.
 
 ## 2. Login
 
-**Code deployed. Production DB is not durable.** `/login` is live. Account APIs 500 without hosted libSQL.
+`/login` is live. `/api/account/me` returns 401 when signed out (route is healthy). Google client id is set; Google client secret was not present in the project.
 
 ## 3. Payments
 
-Live PayPal plans exist in `.env.local`. They are not on Vercel yet. Local `PAYPAL_MODE` stays sandbox.
+Live and sandbox PayPal credentials, webhook id `5GR70029125121704`, and GSong plan ids are on Vercel production. Return URL does not grant access.
 
 | Plan | Price | PayPal plan id |
 | --- | --- | --- |
@@ -23,28 +23,14 @@ Live PayPal plans exist in `.env.local`. They are not on Vercel yet. Local `PAYP
 | Premium monthly | $16.00 | `P-4U428262JP4647148NKXLORA` |
 | Premium yearly | $96.00 | `P-1N575623B09131146NKXLORI` |
 
-Webhook: `https://lyricgenerator.cc/api/billing/webhook` (id `5GR70029125121704`). Return URL does not grant access.
+## 4. SEO
 
-## 4. Git / deploy
+Homepage title remains `Free AI Lyrics Generator | Create Song Lyrics Online`. Ranked routes `/`, `/poem-generator`, `/genre/pop` return 200. `/pricing` is additive.
 
-- Pushed: `24997ca` feat SaaS on `main` (Vercel production success)
-- Local unpushed: `ea776c4` generator hotfix (`file:/tmp` on Vercel + fail-open)
-- GitHub:443 from this machine later timed out; Vercel CLI device login was opened
+## 5. Environment
 
-## 5. SEO
+Set on Vercel production/preview/development. Nothing secret was committed.
 
-Existing public URLs, titles, and homepage copy were not replaced. `/pricing` was added. robots still allow `/`.
+## 6. Remaining owner-only blocker
 
-## 6. Plans
-
-| Plan | Price | Quota | Lyrics-to-song | Commercial |
-| --- | --- | --- | --- | --- |
-| Free | $0 | 10/day | No | No |
-| Basic monthly | $9.70 | 40/day | Yes | No |
-| Basic yearly | $58.20 | 40/day | Yes | Yes |
-| Premium monthly | $16 | 120/day, 3 devices | Yes | No |
-| Premium yearly | $96 | 120/day, 3 devices | Yes | Yes |
-
-## 7. Next (no extra owner questions except the open OAuth window)
-
-Set Vercel production env and hosted DB as soon as the CLI session exists, then deploy the generator hotfix.
+DeepSeek API balance is empty. Public generate cannot succeed until that account is funded.

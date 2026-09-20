@@ -99,7 +99,12 @@ Generate the complete song lyrics now with proper structure labels and formattin
     })
 
     if (!response.ok) {
-      throw new Error(`DeepSeek API error: ${response.statusText}`)
+      const detail = await response.text()
+      console.error("[generate-lyrics] DeepSeek", response.status, detail.slice(0, 180))
+      if (response.status === 402) {
+        return Response.json({ error: "Lyric generation is temporarily unavailable." }, { status: 503 })
+      }
+      throw new Error(`DeepSeek API error: ${response.status}`)
     }
 
     const data = await response.json()

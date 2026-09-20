@@ -1,0 +1,8 @@
+.env*
+!.env.example
+.vercel
+data/*.db
+scripts/_read_chrome_cookies.py
+scripts/_find_chrome_profiles.py
+scripts/_ascii-os.cjs
+scripts/push-vercel-env.mjs

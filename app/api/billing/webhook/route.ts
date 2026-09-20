@@ -12,16 +12,21 @@ export async function POST(req: Request) {
     return Response.json({ error: "Invalid JSON" }, { status: 400 })
   }
 
-  const verified = await verifyPaypalWebhookSignature(
-    {
-      transmissionId: req.headers.get("paypal-transmission-id") || "",
-      transmissionTime: req.headers.get("paypal-transmission-time") || "",
-      certUrl: req.headers.get("paypal-cert-url") || "",
-      authAlgo: req.headers.get("paypal-auth-algo") || "",
-      transmissionSig: req.headers.get("paypal-transmission-sig") || "",
-    },
-    event,
-  )
+  let verified = false
+  try {
+    verified = await verifyPaypalWebhookSignature(
+      {
+        transmissionId: req.headers.get("paypal-transmission-id") || "",
+        transmissionTime: req.headers.get("paypal-transmission-time") || "",
+        certUrl: req.headers.get("paypal-cert-url") || "",
+        authAlgo: req.headers.get("paypal-auth-algo") || "",
+        transmissionSig: req.headers.get("paypal-transmission-sig") || "",
+      },
+      event,
+    )
+  } catch {
+    verified = false
+  }
 
   if (!verified) {
     return Response.json({ error: "Invalid webhook signature" }, { status: 401 })
